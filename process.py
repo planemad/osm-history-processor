@@ -1,8 +1,11 @@
+## Process OSM replication files to extract daily user edits
 import argparse
 import wget
 import subprocess
 import os.path
 import zipfile
+import urllib2
+from bs4 import BeautifulSoup
 
 # Import zlib for compression
 try:
@@ -27,6 +30,10 @@ def bash(command):
 osm_replication_url = "http://planet.osm.org/replication/day/000/000/"
 users = ['Rub21', 'ediyes', 'RichRico', 'Luis36995', 'dannykath', 'andygol', 'shravan91', 'ruthmaben', 'abel801', 'samely', 'calfarome', 'srividya_c', 'PlaneMad']
 edition_steps = 7
+
+# Find latest replication file
+soup = BeautifulSoup(urllib2.urlopen(osm_replication_url).read())
+
 
 ##
 
