@@ -28,7 +28,10 @@ def bash(command):
 
 # OSM repication server url and data team users
 osm_replication_url = "http://planet.osm.org/replication/day/000/000/"
-users = ['Rub21', 'ediyes', 'RichRico', 'Luis36995', 'dannykath', 'andygol', 'shravan91', 'ruthmaben', 'abel801', 'samely', 'calfarome', 'srividya_c', 'PlaneMad']
+
+# Read from users.list
+users_list = open(users.list, 'r').readlines()
+
 edition_steps = 7
 
 # Find latest replication file
@@ -60,6 +63,7 @@ if __name__ == "__main__":
         edition_archive = zipfile.ZipFile("edition_{}.zip".format(edition), 'w')
 
         for user in users:
+            user.strip('\n')
             bash('./osmfilter {}.osc --keep="@user={}" -o={}.osm'.format(edition, user, user))
             edition_archive.write('{}.osm'.format(user), compress_type=compression)
         
