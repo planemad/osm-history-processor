@@ -27,9 +27,15 @@ def bash(command):
     return
 
 # OSM repication server url and data team users
-osm_replication_url = "http://planet.osm.org/replication/day/000/000/"
-users = ['Rub21', 'ediyes', 'RichRico', 'Luis36995', 'dannykath', 'andygol', 'shravan91', 'ruthmaben', 'abel801', 'samely', 'calfarome', 'srividya_c', 'PlaneMad']
-edition_steps = 7
+osm_replication_url = "http://planet.osm.org/replication/day/000/001/"
+
+#Mapbox Team
+users = ['Rub21', 'ediyes', 'RichRico', 'Luis36995', 'dannykath', 'andygol', 'shravan91', 'ruthmaben', 'abel801', 'samely', 'calfarome','karitotp', 'srividya_c', 'PlaneMad','Chetan_Gowda','ramyaragupathy','lxbarth','geohacker','shvrm','pratikyadav','jinalfoflia']
+
+#Zippr Team
+#users = ['anithakumari', 'anthony1', 'anushap', 'Apreethi', 'arjun', 'sekhar', 'Ashok09', 'Bhanu', 'bindhu', 'harisha', 'harishkonda', 'himabindhu', 'himalay', 'jasvinderkaur', 'kushwanth', 'LakshmiC', 'maheshrkm', 'nagaraju', 'Naresh08', 'Navaneetha', 'Nikhil04', 'Pallavi', 'pavankalyanreddy', 'pawankumard', 'pravalika01', 'praveeng', 'premkumar', 'pvprasad', 'rajashekar', 'rajeshvaaari', 'Raju', 'saberkhan', 'saikumar', 'saikumard', 'sampathreddy', 'sdivya', 'shaheenbegum', 'shalinins', 'shashi1', 'shekarn', 'shiva05', 'Smallikarjuna', 'sowjanyaaa', 'Srikanth07', 'thrinath', 'Tinkle', 'udaykanth', 'vamshikrishna', 'venkatesh10', 'vudemraju', 'Yadhi06']
+edition_steps = 4
+
 
 # Find latest replication file
 soup = BeautifulSoup(urllib2.urlopen(osm_replication_url).read())
@@ -45,7 +51,7 @@ if __name__ == "__main__":
     while edition_steps>=0:
         
         # Set the current edition number
-        edition = str(args.edition - edition_steps) 
+        edition = str(args.edition - edition_steps).zfill(3) 
 
         #Download the replication edition
         wget.download(osm_replication_url + edition + ".osc.gz")
