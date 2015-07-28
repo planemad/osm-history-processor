@@ -1,6 +1,8 @@
 ## Openstreetmap History Processor
 Python port of [processing-osm-history](https://github.com/Rub21/processing-osm-history/)
 
+### Installation
+
 ### Usage
 Find the latest edition number from http://planet.osm.org/replication/day/000/000/ . Eg `936`
 

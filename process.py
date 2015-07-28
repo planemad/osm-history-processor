@@ -13,7 +13,7 @@ try:
     compression = zipfile.ZIP_DEFLATED
 except:
     compression = zipfile.ZIP_STORED
-    
+
 # Define arguments for the parser
 parser = argparse.ArgumentParser(description='History processor for Openstreetmap')
 parser.add_argument('edition', metavar='N', type=int,
@@ -30,7 +30,7 @@ def bash(command):
 osm_replication_url = "http://planet.osm.org/replication/day/000/001/"
 
 #Mapbox Team
-users = ['Rub21', 'ediyes', 'RichRico', 'Luis36995', 'dannykath', 'andygol', 'shravan91', 'ruthmaben', 'abel801', 'samely', 'calfarome','karitotp', 'srividya_c', 'PlaneMad','Chetan_Gowda','ramyaragupathy','lxbarth','geohacker','shvrm','pratikyadav','jinalfoflia']
+users = ['nikhilprabhakar']
 
 #Zippr Team
 #users = ['anithakumari', 'anthony1', 'anushap', 'Apreethi', 'arjun', 'sekhar', 'Ashok09', 'Bhanu', 'bindhu', 'harisha', 'harishkonda', 'himabindhu', 'himalay', 'jasvinderkaur', 'kushwanth', 'LakshmiC', 'maheshrkm', 'nagaraju', 'Naresh08', 'Navaneetha', 'Nikhil04', 'Pallavi', 'pavankalyanreddy', 'pawankumard', 'pravalika01', 'praveeng', 'premkumar', 'pvprasad', 'rajashekar', 'rajeshvaaari', 'Raju', 'saberkhan', 'saikumar', 'saikumard', 'sampathreddy', 'sdivya', 'shaheenbegum', 'shalinins', 'shashi1', 'shekarn', 'shiva05', 'Smallikarjuna', 'sowjanyaaa', 'Srikanth07', 'thrinath', 'Tinkle', 'udaykanth', 'vamshikrishna', 'venkatesh10', 'vudemraju', 'Yadhi06']
@@ -44,18 +44,18 @@ soup = BeautifulSoup(urllib2.urlopen(osm_replication_url).read())
 ##
 
 if __name__ == "__main__":
-    
+
     # Create a dir for the files
     bash("mkdir files")
     bash("cd files")
     while edition_steps>=0:
-        
+
         # Set the current edition number
-        edition = str(args.edition - edition_steps).zfill(3) 
+        edition = str(args.edition - edition_steps).zfill(3)
 
         #Download the replication edition
         wget.download(osm_replication_url + edition + ".osc.gz")
-        
+
         #Unzip the file
         bash("gzip -d {}".format(edition + ".osc.gz"))
 
@@ -68,14 +68,13 @@ if __name__ == "__main__":
         for user in users:
             bash('./osmfilter {}.osc --keep="@user={}" -o={}.osm'.format(edition, user, user))
             edition_archive.write('{}.osm'.format(user), compress_type=compression)
-        
+
         # Cleanup
         bash("rm {}.*".format(user))
 
         edition_archive.close()
-        
+
         #Process previous edition number
         edition_steps-=1
-        
+
     #Package all edition archives
-    
