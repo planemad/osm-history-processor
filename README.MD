@@ -2,6 +2,11 @@
 Python port of [processing-osm-history](https://github.com/Rub21/processing-osm-history/)
 
 ### Installation
+```
+git clone https://github.com/planemad/osm-history-processor.git
+cd osm-history-processor
+pip install -r requirements.txt
+```
 
 ### Usage
 Find the latest edition number from http://planet.osm.org/replication/day/000/000/ . Eg `936`
