@@ -1,9 +1,13 @@
 ## Openstreetmap History Processor
 Python port of [processing-osm-history](https://github.com/Rub21/processing-osm-history/)
 
+### Installation
+
+```
+git clone https://github.com/planemad/osm-history-processor.git
+cd osm-history-processor
+pip install -r requirements.txt
+```
+
 ### Usage
-Find the latest edition number from http://planet.osm.org/replication/day/000/000/ . Eg `936`
-
-Then use this command to donwload the history changesets for the last 7 days and extracts edits per user. The edits for each day of the team will be compressed into a file edition_<edition_namber>.zip
-
-```python process.py <edition_number>```
+`python process.py date days`, for example - to find changes starting August 4, 2015 and 5 days back in time run `python process.py 2015-8-4 5`

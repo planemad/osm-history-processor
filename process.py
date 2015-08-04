@@ -1,11 +1,12 @@
-## Process OSM replication files to extract daily user edits
+#!/usr/bin/python
+
 import argparse
 import wget
 import subprocess
 import os.path
 import zipfile
 import urllib2
-from bs4 import BeautifulSoup
+from datetime import date
 
 # Import zlib for compression
 try:
@@ -13,12 +14,17 @@ try:
     compression = zipfile.ZIP_DEFLATED
 except:
     compression = zipfile.ZIP_STORED
-    
+
 # Define arguments for the parser
 parser = argparse.ArgumentParser(description='History processor for Openstreetmap')
-parser.add_argument('edition', metavar='N', type=int,
-                   help='Latest edition number')
+parser.add_argument('date', metavar='date', type=str, help='Date you want to start')
+parser.add_argument('days', metavar='days', type=int, help='How many days history?')
+
 args = parser.parse_args()
+start_date = date(2012, 9, 12)
+end_date = date(int(args.date.split('-')[0]), int(args.date.split('-')[1]), int(args.date.split('-')[2]))
+delta = (end_date - start_date).days
+days = args.days or 7;
 
 # Utility function to run shell commands
 def bash(command):
@@ -27,53 +33,47 @@ def bash(command):
     return
 
 # OSM repication server url and data team users
-osm_replication_url = "http://planet.osm.org/replication/day/000/000/"
+osm_replication_url = "http://planet.osm.org/replication/day/"
 
 # Read from users.list
-users_list = open(users.list, 'r').readlines()
-
-edition_steps = 7
-
-# Find latest replication file
-soup = BeautifulSoup(urllib2.urlopen(osm_replication_url).read())
-
-
-##
+users = open('users.list', 'r').readlines()
 
 if __name__ == "__main__":
-    
+
     # Create a dir for the files
     bash("mkdir files")
     bash("cd files")
-    while edition_steps>=0:
-        
+    while days>=0:
+
         # Set the current edition number
-        edition = str(args.edition - edition_steps) 
+        # Find the exact replication location based on http://wiki.openstreetmap.org/wiki/Planet.osm/diffs
+        edition = delta - days
+        aaa = "000"
+        bbb = str(edition/1000).zfill(3)
+        ccc = str(edition%1000).zfill(3)
 
-        #Download the replication edition
-        wget.download(osm_replication_url + edition + ".osc.gz")
-        
-        #Unzip the file
-        bash("gzip -d {}".format(edition + ".osc.gz"))
+        url =  osm_replication_url+aaa+"/"+bbb+"/"+ccc+".osc.gz"
+        print '# Replication URL', url
 
-        #Convert from osc to 05m format
-        bash("./osmconvert {}.osc > {}.05m".format(edition, edition))
+        # Download the replication
+        wget.download(url)
 
-        #Create a zip archive for the changesets
-        edition_archive = zipfile.ZipFile("edition_{}.zip".format(edition), 'w')
+        # Unzip the file
+        bash("gzip -d {}".format(ccc + ".osc.gz"))
+
+        # Create an archive for the changesets
+        edition_archive = zipfile.ZipFile("edition_{}.zip".format(ccc), 'w')
 
         for user in users:
-            user.strip('\n')
-            bash('./osmfilter {}.osc --keep="@user={}" -o={}.osm'.format(edition, user, user))
+            user = user.strip('\n')
+            print '# Processing ' + user +"'s changes"
+            bash('./osmfilter {}.osc --keep="@user={}" -o={}.osm'.format(ccc, user, user))
             edition_archive.write('{}.osm'.format(user), compress_type=compression)
-        
+
         # Cleanup
         bash("rm {}.*".format(user))
 
         edition_archive.close()
-        
-        #Process previous edition number
-        edition_steps-=1
-        
-    #Package all edition archives
-    
+
+        # Process previous edition number
+        days-=1
