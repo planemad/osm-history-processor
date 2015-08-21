@@ -3,7 +3,7 @@
 import argparse
 import wget
 import subprocess
-import os.path
+import os
 import zipfile
 import urllib2
 from datetime import date
@@ -67,13 +67,18 @@ if __name__ == "__main__":
         for user in users:
             user = user.strip('\n')
             print '# Processing ' + user +"'s changes"
+            # Filter the edits for a particular user from the edition
             bash('./osmfilter {}.osc --keep="@user={}" -o={}.osm'.format(ccc, user, user))
-            edition_archive.write('{}.osm'.format(user), compress_type=compression)
+            # Write files larger than 200 bytes to the zip
+            if os.path.getsize('{}.osm'.format(user)) > 200 :
+                edition_archive.write('{}.osm'.format(user), compress_type=compression)
+        edition_archive.close()
 
         # Cleanup
         bash("rm {}.*".format(user))
-
-        edition_archive.close()
+        bash("rm *.osm")
+        bash("rm *.osc")
+        bash("rm *.05m")
 
         # Process previous edition number
         days-=1
