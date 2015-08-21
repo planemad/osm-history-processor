@@ -32,10 +32,10 @@ def bash(command):
     subprocess.call(command, shell=True)
     return
 
-# OSM repication server url and data team users
+# OSM repication server url
 osm_replication_url = "http://planet.osm.org/replication/day/"
 
-# Read from users.list
+# Read users from users.list
 users = open('users.list', 'r').readlines()
 
 if __name__ == "__main__":
@@ -47,7 +47,8 @@ if __name__ == "__main__":
 
         # Set the current edition number
         # Find the exact replication location based on http://wiki.openstreetmap.org/wiki/Planet.osm/diffs
-        edition = delta - days
+        # Add 1 since we want the edition of the following day which contains changes of the previuos day
+        edition = delta - days + 1
         aaa = "000"
         bbb = str(edition/1000).zfill(3)
         ccc = str(edition%1000).zfill(3)
