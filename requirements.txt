@@ -1,2 +1,1 @@
-beautifulsoup4==4.3.2
 wget==2.2

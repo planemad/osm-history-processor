@@ -1,5 +1,6 @@
-## Openstreetmap History Processor
-Python port of [processing-osm-history](https://github.com/Rub21/processing-osm-history/)
+## OpenStreetMap History Processor
+Python port of [processing-osm-history](https://github.com/Rub21/processing-osm-history/) to download the historical edits of a list of OpenStreetMap users.
+
 
 ### Installation
 
